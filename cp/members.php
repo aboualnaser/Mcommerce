@@ -44,8 +44,8 @@ elseif ($do == 'Edit') {
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Password</label>
 					<div class="col-sm-10">
-					<input type="hidden" name="oldpassword" class="form-contol" autocomplete="new-password" />
-						<input type="password" name="newpassword" class="form-contol" autocomplete="new-password" />
+					<input type="hidden" name="oldpassword" value="'<?php echo $row['password']?>" />
+					<input type="password" name="newpassword" class="form-contol" autocomplete="new-password" />
 					</div>
 				</div>
 				<!--End Password Field -->
