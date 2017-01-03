@@ -64,3 +64,37 @@ h1{
 	color: #888;
 	font-weight: bold;
 }
+.form-control{
+	position: relative;
+}
+.asterisk{
+	font-size: 17px;
+position: absolute;
+color: #d20707;
+right: 725px;
+top: 7px;
+}
+.show-pass{
+	position: absolute;
+	top: 6px;
+	right: 677px;
+}
+/* table style
+*/
+.main-table{
+	-webkit-box-shadow :0 3px 10px #CCC;
+	-moz-box-shadow :0 3px 10px #CCC;
+	box-shadow :0 3px 10px #CCC;
+}
+.main-table td{
+	background-color: #fff;
+	vertical-align: middle;
+    text-align: center;
+}
+.main-table tr:first-child td{
+	background-color: #333;
+	color: #FFF;
+	text-align: center;
+
+
+}
