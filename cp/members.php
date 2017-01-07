@@ -15,9 +15,13 @@ $do =isset($_GET['do']) ? $_GET['do']:'Manage';
 if ($do=='Manage') {
 
 	//Manage Page
+	$query='';
+	if (isset($_GET['page'])&& $_GET['page']=='pending') {
+		$query= 'AND regstatus = 0';
+	}
 
 // Select All Users Except Admin 
-			$stmt = $con->prepare("SELECT * FROM users WHERE groupid != 1");
+			$stmt = $con->prepare("SELECT * FROM users WHERE groupid != 1 $query");
 			// Execute The Statement
 			$stmt->execute();
 			// Assign To Variable 
@@ -48,13 +52,20 @@ if ($do=='Manage') {
 				echo "<td>" . $row['username'] . "</td>";
 				echo "<td>" . $row['email'] . "</td>";
 				echo "<td>" . $row['fullname'] . "</td>";
-				echo '<td></td>';
+				echo "<td>" . $row['date'] . "</td>";
 				echo "<td>
 					<a href='members.php?do=Edit&userid=" . $row['userid'] . "' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-					<a href='members.php?do=Delete&userid=" . $row['userid'] . "' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a></td>";
-				echo "</tr>";
+					<a href='members.php?do=Delete&userid=" . $row['userid'] . "' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
+				
+				if ($row['regstatus']==0) {
+
+					echo"<a href='members.php?do=Active&userid=" . $row['userid'] . "' class='btn btn-info active'><i class='fa fa-close'></i> Active </a></td>";
+				
+			}
+			echo "</tr>";
 							}
 						}
+
 						?>
        
         
@@ -175,8 +186,10 @@ redirectHome($existuser,6);
 	// Insert In DataBase
 
 	$stmt = $con->prepare("INSERT INTO 
-							users(username, password, email,fullname)
-							VALUES(:zuser, :zpass, :zmail, :zname)");
+							users(username, password, email,fullname,regstatus,date)
+							VALUES(:zuser, :zpass, :zmail, :zname,
+							     0,
+							     now())");
 						$stmt->execute(array(
 							'zuser' => $user,
 							'zpass' => $hashpass,
@@ -190,8 +203,10 @@ redirectHome($existuser,6);
 }
 }
 else{
+	echo "<div class='container'>";
 	$theMsg ='<div class="alert alert-danger">Sorry You Cant Brows This Page Directly</div>';
 	redirectHome($theMsg,'back');
+	echo "</div>";
 }
 echo "</div>";
 }
@@ -258,7 +273,10 @@ elseif ($do == 'Edit') {
            <?php 
        }
        else{
-       	echo "There Is No Such ID";
+       	echo "<div class='container'>";
+       	$theMsg= "<div class='alert alert-danger'>There Is No Such ID</div>";
+       	redirectHome($theMsg);
+       	echo "</div>";
            }
    }
  elseif ($do == 'Update') {
@@ -278,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     else {$password=sha1($_POST['newpassword']);}
     //Validate The Form
 $formerror=array();
-if (strlen($user)<6) {
+if (strlen($user)<3) {
 	$formerror[]='Username Cant Be less Than 6 chars';
 }
 
@@ -302,11 +320,16 @@ if (empty($formerror)) {
 	
 	$stmt=$con->prepare("UPDATE users SET username=?,password=?,email=?,fullname=? WHERE userid=?");
 	$stmt->execute(array($user,$password,$email,$name,$id));
-	echo "<div class='alert alert-success'>". $stmt->rowCount().'Record Updated</div>';
+	$theMsg="<div class='alert alert-success'>". $stmt->rowCount().'Record Updated</div>';
+redirectHome($theMsg);
 }
 }
 else{
-	echo "Sorry You Can't Brows This Page Directly";
+
+	echo "<div class='container'>";
+       	$theMsg= "<div class='alert alert-danger'>There Is No Such ID</div>";
+       	redirectHome($theMsg);
+       	echo "</div>";
 }
 echo "</div>";
 }
@@ -332,6 +355,28 @@ elseif ($do == 'Delete') { // Delete Member Page
 				}
 			echo '</div>';
 		}
+	elseif ($do == 'Active')
+		# Active Page
+		 { 
+			echo "<h1 class='text-center'>Active Member</h1>";
+			echo "<div class='container'>";
+				// Check If Get Request userid Is Numeric & Get The Integer Value Of It
+				$userid = isset($_GET['userid']) && is_numeric($_GET['userid']) ? intval($_GET['userid']) : 0;
+				// Select All Data Depend On This ID
+				$check=checkItem('userid','users',$userid);
+				// If There's Such ID Show The Form
+				if ($check>0) {
+					$stmt = $con->prepare("UPDATE users SET regstatus =1 WHERE userid = ?");
+					$stmt->execute(array($userid));
+					$theMsg= "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Active</div>';
+					redirectHome($theMsg, 6);
+				} else {
+					$theMsg= '<div class="alert alert-danger">This ID is Not Exist</div>';
+					redirectHome($theMsg,6);
+				}
+			echo '</div>';
+		}
+	
 include $tmp.'footer.inc';
 }else {
 	header('location: index.php');

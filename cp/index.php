@@ -12,6 +12,7 @@ if( isset($_POST['login']) ) {
 	$username=$_POST['user'];
 	$password=$_POST['password'];
 	$hashedpass=sha1($password);
+    echo $hashedpass;
     $stmt=$con->prepare("SELECT userid, username,password FROM users WHERE username =? AND password=? AND groupid=1 
     	LIMIT 1");
     $stmt->execute(array($username,$hashedpass));

@@ -98,3 +98,36 @@ top: 7px;
 
 
 }
+.active{
+	margin-left: 4px;
+}
+/*start dashbord style*/
+.home-stats .stat{
+	background-color: #EEE;
+	padding: 20px;
+	font-size: 15px;
+	color: #FFF;
+	border-radius: 5px;
+}
+.home-stats .stat a{
+	text-decoration: none;
+}
+.home-stats .stat span{
+	display: block;
+	font-size: 70px;
+}
+.latest{
+	margin-top: 26px;
+}
+.home-stats .st-member{
+	background-color: #f1c40f;
+}
+.home-stats .st-pending{
+	background-color: #8E44AD;
+}
+.home-stats .st-comment{
+	background-color: #3498DB;
+}
+.home-stats .st-items{
+	background-color: #E74C3C;
+}
