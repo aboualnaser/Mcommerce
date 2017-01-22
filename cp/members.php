@@ -1,5 +1,5 @@
 <?php
-
+ob_start();
 
 /*
 =============================================
@@ -85,21 +85,21 @@ elseif ($do == 'Add') {
 	
 		<h1 class="text-center">Add New Members</h1>
 		<div class="container">
-			<form class="from-horizontal" action="?do=Insert" method="POST">
+			<form class="form-horizontal" action="?do=Insert" method="POST">
 			
 			    <!--Start Username Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Username</label>
-					<div class="col-sm-10">
-						<input type="text" name="username" class="form-contol" autocomplete="off" required="required" placeholder="Username To Login In Shop" />
+					<div class="col-sm-10 col-md-4">
+						<input type="text" name="username" class="form-control" autocomplete="off" required="required" placeholder="Username To Login To Shop" />
 					</div>
 				</div>
 				<!--End Username Field -->
 				<!--Start Password Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Password</label>
-					<div class="col-sm-10">
-					<input type="password" name="password" required="required" placeholder="Password Must Be Strong" class="password form-contol" autocomplete="off"/>
+					<div class="col-sm-10 col-md-4">
+					<input type="password" name="password" required="required" placeholder="Password Must Be Strong" class="password form-control" autocomplete="off"/>
 					<i class="show-pass fa fa-eye fa-2x"></i>
 					</div>
 				</div>
@@ -107,16 +107,16 @@ elseif ($do == 'Add') {
 				<!--Start Email Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Email</label>
-					<div class="col-sm-10">
-						<input type="email" name="email" class="form-contol" required="required" placeholder="Enter Email" />
+					<div class="col-sm-10 col-md-4">
+						<input type="email" name="email" class="form-control" required="required" placeholder="Enter Email" />
 					</div>
 				</div>
 				<!--End Email Field -->
-				<!--Start Email Field --> 
+				<!--Start Full Name Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Full Name</label>
-					<div class="col-sm-10">
-						<input type="text" name="full" class="form-contol" required="required" placeholder="Full name " />
+					<div class="col-sm-10 col-md-4">
+						<input type="text" name="full" class="form-control" required="required" placeholder="Full name " />
 					</div>
 				</div>
 				<!--End Full Name Field -->
@@ -136,78 +136,78 @@ elseif ($do == 'Add') {
 
 elseif ($do == 'Insert') {
 	
-if ($_SERVER['REQUEST_METHOD']=='POST') {
+	if ($_SERVER['REQUEST_METHOD']=='POST') {
 
-	echo "<h1 class='text-center'>Add New Members</h1>";
-    echo "<div class='container'>";
-	//GetVariable From Form
-	$id    =$_POST['userid'];
-	$user  =$_POST['username'];
-	$email =$_POST['email'];
-	$name  =$_POST['full'];
-    $password=$_POST['password'];
-    $hashpass=sha1($password);
-    //Validate The Form
-$formerror=array();
-if (strlen($user)<3) {
-	$formerror[]='Username Cant Be less Than 6 chars';
-}
+		echo "<h1 class='text-center'>Add New Members</h1>";
+	    echo "<div class='container'>";
+		//GetVariable From Form
+		$id    =$_POST['userid'];
+		$user  =$_POST['username'];
+		$email =$_POST['email'];
+		$name  =$_POST['full'];
+	    $password=$_POST['password'];
+	    $hashpass=sha1($password);
+	    //Validate The Form
+	$formerror=array();
+	if (strlen($user)<3) {
+		$formerror[]='Username Cant Be less Than 6 chars';
+	}
 
-if (empty($user)) {
-	$formerror[]='Username Cant Be <strong>Empty</strong>';
-}
-if (empty($password)) {
-	$formerror[]='Password Cant Be <strong>Empty</strong>';
-}
-if (empty($name)) {
-	$formerror[]='Full name Cant Be <strong>Empty</strong>';
-}
-if (empty($email)) {
-	$formerror[]='Email Cant Be <strong>Empty</strong>';
-}
-foreach ($formerror as $error) {
-	echo '<div class="alert alert-danger">'.$error.'</div>';
-}
-//Check If There Is not Errors
+	if (empty($user)) {
+		$formerror[]='Username Cant Be <strong>Empty</strong>';
+	}
+	if (empty($password)) {
+		$formerror[]='Password Cant Be <strong>Empty</strong>';
+	}
+	if (empty($name)) {
+		$formerror[]='Full name Cant Be <strong>Empty</strong>';
+	}
+	if (empty($email)) {
+		$formerror[]='Email Cant Be <strong>Empty</strong>';
+	}
+	foreach ($formerror as $error) {
+		echo '<div class="alert alert-danger">'.$error.'</div>';
+	}
+	//Check If There Is not Errors
 
-if (empty($formerror)) {
+	if (empty($formerror)) {
 
-//Check If User Is Exist in Databasse
-	                  
-    $check=checkItem('username', 'users', $user);
-	if ($check==1) {
-	$existuser= '<div class="alert alert-danger">Sorry This User Is Exist</div>';
-	
-redirectHome($existuser,6);
+	//Check If User Is Exist in Databasse
+		                  
+	    $check=checkItem('username', 'users', $user);
+		if ($check==1) {
+		$existuser= '<div class="alert alert-danger">Sorry This User Is Exist</div>';
+		
+	redirectHome($existuser,6);
+		}
+		else{
+
+
+		// Insert In DataBase
+
+		$stmt = $con->prepare("INSERT INTO 
+								users(username, password, email,fullname,regstatus,date)
+								VALUES(:zuser, :zpass, :zmail, :zname,
+								     0,
+								     now())");
+							$stmt->execute(array(
+								'zuser' => $user,
+								'zpass' => $hashpass,
+								'zmail' => $email,
+								'zname' => $name
+							));
+			// Echo Success Message
+		$theMsg = "<div class='alert alert-success'>". $stmt->rowCount().'Record Inserted</div>';
+	    redirectHome($theMsg,'back');
+	}
+	}
 	}
 	else{
-
-
-	// Insert In DataBase
-
-	$stmt = $con->prepare("INSERT INTO 
-							users(username, password, email,fullname,regstatus,date)
-							VALUES(:zuser, :zpass, :zmail, :zname,
-							     0,
-							     now())");
-						$stmt->execute(array(
-							'zuser' => $user,
-							'zpass' => $hashpass,
-							'zmail' => $email,
-							'zname' => $name
-						));
-		// Echo Success Message
-	$theMsg = "<div class='alert alert-success'>". $stmt->rowCount().'Record Inserted</div>';
-    redirectHome($theMsg,'back');
-}
-}
-}
-else{
-	echo "<div class='container'>";
-	$theMsg ='<div class="alert alert-danger">Sorry You Cant Brows This Page Directly</div>';
-	redirectHome($theMsg,'back');
-	echo "</div>";
-}
+		echo "<div class='container'>";
+		$theMsg ='<div class="alert alert-danger">Sorry You Cant Brows This Page Directly</div>';
+		redirectHome($theMsg,'back');
+		echo "</div>";
+    }
 echo "</div>";
 }
 
@@ -226,38 +226,38 @@ elseif ($do == 'Edit') {
 	
 		<h1 class="text-center">Edite Members</h1>
 		<div class="container">
-			<form class="from-horizontal" action="?do=Update" method="POST">
+			<form class="form-horizontal" action="?do=Update" method="POST">
 			<input type="hidden" name="userid" value="<?php echo $userid?>">
 			    <!--Start Username Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Username</label>
-					<div class="col-sm-10">
-						<input type="text" name="username" class="form-contol" value='<?php echo $row['username'] ?>' autocomplete="off" required="required" />
+					<div class="col-sm-10 col-md-6">
+						<input type="text" name="username" class="form-control" value='<?php echo $row['username'] ?>' autocomplete="off" required="required" />
 					</div>
 				</div>
 				<!--End Username Field -->
 				<!--Start Password Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Password</label>
-					<div class="col-sm-10">
+					<div class="col-sm-10 col-md-6">
 					<input type="hidden" name="oldpassword" value="'<?php echo $row['password']?>" />
-					<input type="password" name="newpassword" class="form-contol" autocomplete="new-password" placeholder="Leve blank If You Do Not Want To Change" />
+					<input type="password" name="newpassword" class="form-control" autocomplete="new-password" placeholder="Leve blank If You Do Not Want To Change" />
 					</div>
 				</div>
 				<!--End Password Field -->
 				<!--Start Email Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Email</label>
-					<div class="col-sm-10">
-						<input type="email" name="email" class="form-contol" value='<?php echo $row['email']?>'required="required"/>
+					<div class="col-sm-10 col-md-6">
+						<input type="email" name="email" class="form-control" value='<?php echo $row['email']?>'required="required"/>
 					</div>
 				</div>
 				<!--End Email Field -->
 				<!--Start Email Field --> 
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Full Name</label>
-					<div class="col-sm-10">
-						<input type="text" name="full" class="form-contol" value='<?php echo $row['fullname']?>' required="required"/>
+					<div class="col-sm-10 col-md-6">
+						<input type="text" name="full" class="form-control" value='<?php echo $row['fullname']?>' required="required"/>
 					</div>
 				</div>
 				<!--End Full Name Field -->
@@ -382,3 +382,4 @@ include $tmp.'footer.inc';
 	header('location: index.php');
 	exit();
 }
+ob_end_flush();

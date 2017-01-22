@@ -56,9 +56,6 @@ background-color: #8e44ad;
 }
 /* end navbar
 */
-input{
-	margin: 5px;
-}
 h1{
 	font-size: 30px;
 	color: #888;
@@ -71,13 +68,13 @@ h1{
 	font-size: 17px;
 position: absolute;
 color: #d20707;
-right: 725px;
+right: 20px;
 top: 7px;
 }
 .show-pass{
 	position: absolute;
 	top: 6px;
-	right: 677px;
+	right: -30px;
 }
 /* table style
 */
@@ -111,6 +108,7 @@ top: 7px;
 }
 .home-stats .stat a{
 	text-decoration: none;
+	color: #FFF;
 }
 .home-stats .stat span{
 	display: block;
@@ -130,4 +128,108 @@ top: 7px;
 }
 .home-stats .st-items{
 	background-color: #E74C3C;
+}
+/*dashbord panel*/
+.latest-users{
+	margin-bottom: 0px;
+}
+.latest-users li{
+	padding: 10px;
+	overflow: hidden;
+}
+.latest-users li:nth-child(odd){
+	background-color: #EEE;
+}
+.latest-users .btn-success{
+	padding: 3px 8px;
+}
+.latest-users .btn-info{
+	padding: 3px 8px;
+	margin-right: 5px; 
+}
+/*end members page
+/*start categoris page*/
+.categories .cat h3{
+	margin: 0 0 0px;
+	cursor: pointer;
+}
+.categories .cat:last-of-type ~ hr{
+	display: none;
+}
+.categories .cat{
+	padding: 15px;
+	position: relative;
+	overflow: hidden;
+}
+.categories .cat .hidden-buttons a{
+	margin-right: 5px;
+}
+.categories .cat:hover .hidden-buttons{
+	right: 10px;
+
+}
+.categories .cat:hover {
+	background-color: #EEE;
+}
+.categories .cat .hidden-buttons{
+	-webkit-transition: all .5s ease-in-out;
+	-moz-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+	position: absolute;
+	top: 15px;
+	right: -120px;
+}
+.container{
+	width: 1000Px;
+}
+.vis{
+	background-color: #D35400;
+color: white;
+padding: 5px;
+border-radius: 5px;
+margin-right: 5px;
+
+}
+.comments{
+	background-color: #2C3E50;
+color: white;
+padding: 5px;
+border-radius: 5px;
+margin-right: 5px;
+
+}
+.ads{
+	background-color: #c0392B;
+color: white;
+padding: 5px;
+border-radius: 5px;
+margin-right: 5px;
+
+}
+.categories hr{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+.categories .panel-heading i {
+	position: relative;
+	top: 1px;
+}
+
+.categories .panel-body {
+	padding: 0;
+}
+.categories .option a{
+	color: #888;
+	text-decoration: none;
+}
+.categories .option span{
+	color: #888;
+    cursor: pointer;
+}
+.categories .option .active {
+	color: #F00;
+    font-weight:bold;
+}
+.categories .add-category{
+	margin-top: -10px;
 }

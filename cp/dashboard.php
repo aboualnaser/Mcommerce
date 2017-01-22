@@ -1,8 +1,14 @@
 <?php
+ob_start();
 session_start();
 if (isset($_SESSION[username])) {
 	$pageTitle='Dashboard';
+	
+	
 include 'temp.php';
+//Call Latestusers
+$lastuser=4;
+$theletst=getLatest("*","users","userid",$lastuser);
 /*start dashbord page
 */
 ?>
@@ -16,7 +22,7 @@ include 'temp.php';
 			<div class="stat st-pending">Pending Members<span><a href="members.php?do=Manage&page=pending"><?php echo checkItem('regstatus','users',0); ?></a></span></div>
 		</div>
 		<div class="col-md-3">
-			<div class="stat st-items">Total Items<span>32</span></div>
+			<div class="stat st-items">Total Items<span><a href="items.php"><?php echo countItems('Items_ID','items'); ?></a></span></div>
 		</div>
 		<div class="col-md-3">
 			<div class="stat st-comment">Total Comments<span>123</span></div>
@@ -28,18 +34,25 @@ include 'temp.php';
 		   <div class="col-md-6">
 			  <div class="panel panel-default">
 				   <div class="panel-heading">
-				   <?php  $lastuser=4; ?>
+				      
 					<i class="fa fa-users"></i>Latest Register Users = <?php echo $lastuser ?>
 				   </div>
 			      
 			       <div class="panel-body">
+			       <ul class="list-unstyled latest-users">
 				   			   <?php
-                                $theletst=getLatest("*","users","userid",$lastuser);
+                                
                                   foreach ($theletst as $user) {
-	                                     echo $user['username'].'<br>';
+	                                     echo '<li>'.$user['username'].'<a href="members.php?do=Edit&userid='.$user['userid'].'"><span class="btn btn-success pull-right"><i class="fa fa-edit">Edit</i></span></a>';
+	                                     if ($user['regstatus']==0) {
+
+					echo"<a href='members.php?do=Active&userid=" . $user['userid'] . "' class='btn btn-info active pull-right'><i class='fa fa-close'></i> Active </a></td>";
+				
+			}
+			echo '</li>';
                                           }
                                  ?>
-
+                    </ul>
 
 				   </div>
 			   </div>
@@ -65,3 +78,5 @@ include $tmp.'footer.inc';
 	header('location: index.php');
 	exit();
 }
+ob_end_flush();
+?>
